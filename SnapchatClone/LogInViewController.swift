@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+import FirebaseAuth
 
 class LogInViewController: UIViewController, UITextFieldDelegate {
     
@@ -22,15 +22,40 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         // TODO:
         // Replace the following line with the code in the README and complete the
         // code as required.
-        performSegue(withIdentifier: segueLogInToMainPage, sender: self)
+        guard let emailText = emailTextField.text else { return }
+        guard let passwordText = passwordTextField.text else { return }
+        
+        if emailText == "" || passwordText == "" {
+            //Alert to tell the user that there was an error because they didn't fill anything in the textfields
+            let alertController = UIAlertController(title: "Log In Error", message: "Please enter an email and password.", preferredStyle: .alert)
+            let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+            alertController.addAction(defaultAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+        else {
+            // email and password fields are not blank, let's try logging in the user!
+            // you'll need to use `emailText` and `passwordText`, and a method found in this
+            // api doc https://firebase.google.com/docs/auth/ios/start
+            // if the error == nil, segue to the main page using `performSegue` with identifier
+            // `segueLogInToMainPage`
+            // if there is an error signing in (error != nil), present the following alert:
+            Auth.auth().signIn(withEmail: emailText, password: passwordText) { (user, error) in
+                if error != nil {
+                    let alertController = UIAlertController(title: "Log In Error", message: error?.localizedDescription, preferredStyle: .alert)
+                    let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+                    alertController.addAction(defaultAction)
+                    self.present(alertController, animated: true, completion: nil)
+                } else {
+                    self.performSegue(withIdentifier: "logInToMainPage", sender: self)
+                }
+            }
+        }
     }
     
     
     @IBAction func signUpPressed(_ sender: UIButton) {
-        performSegue(withIdentifier:segueLogInToSignUp, sender: self)
+        performSegue(withIdentifier: "logInToSignUp", sender: self)
     }
-    
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,8 +69,11 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
     // Authenticate users automatically if they already signed in earlier.
     // Hint: Just check if the current user is nil using firebase and if not, perform a segue. You're welcome :)
     override func viewDidAppear(_ animated: Bool) {
-        //YOUR CODE HERE
-        
+        Auth.auth().addStateDidChangeListener { (auth, user) in
+            if user != nil {
+                self.performSegue(withIdentifier: segueLogInToMainPage, sender: self)
+            }
+        }
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {

@@ -1,0 +1,6 @@
+framework module Pods_SnapchatProject {
+  umbrella header "Pods-SnapchatProject-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -19,7 +19,7 @@ let segueLogInToSignUp = "logInToSignUp"
 // Firebase database strings
 let firUsersNode = "Users"
 let firReadPostsNode = "readPosts"
-let firPostsNode = "Posts"
+let firPostsNode = "posts"
 let firUsernameNode = "username"
 let firThreadNode = "thread"
 let firDateNode = "date"

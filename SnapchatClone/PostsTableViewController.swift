@@ -7,6 +7,9 @@
 //
 
 import UIKit
+import FirebaseDatabase
+import FirebaseStorage
+import MBProgressHUD
 
 class PostsTableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
@@ -106,19 +109,19 @@ class PostsTableViewController: UIViewController, UITableViewDelegate, UITableVi
             navigationController?.navigationBar.isHidden = true
             tabBarController?.tabBar.isHidden = true
         } else {
-//            let hud = MBProgressHUD.showAdded(to: view, animated: true)
-//            getDataFromPath(path: post.postImagePath, completion: { (data) in
-//                if let data = data {
-//                    let image = UIImage(data: data)
-//                    self.loadedImagesById[post.postId] = image
-//                    MBProgressHUD.hide(for: self.view, animated: true)
-//                    self.postImageViewButton.isHidden = false
-//                    self.postImageViewButton.setImage(image, for: .normal)
-//                    // hide the navigation and tab bar for presentation
-//                    self.navigationController?.navigationBar.isHidden = true
-//                    self.tabBarController?.tabBar.isHidden = true
-//                }
-//            })
+            let hud = MBProgressHUD.showAdded(to: view, animated: true)
+            getDataFromPath(path: post.postImagePath, completion: { (data) in
+                if let data = data {
+                    let image = UIImage(data: data)
+                    self.loadedImagesById[post.postId] = image
+                    MBProgressHUD.hide(for: self.view, animated: true)
+                    self.postImageViewButton.isHidden = false
+                    self.postImageViewButton.setImage(image, for: .normal)
+                    // hide the navigation and tab bar for presentation
+                    self.navigationController?.navigationBar.isHidden = true
+                    self.tabBarController?.tabBar.isHidden = true
+                }
+            })
         }
     }
     

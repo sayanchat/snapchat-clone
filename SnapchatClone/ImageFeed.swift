@@ -8,6 +8,8 @@
 
 import Foundation
 import UIKit
+import FirebaseDatabase
+import FirebaseStorage
 
 var threads: [String: [Post]] = ["Memes": [], "Dog Spots": [], "Random": []]
 
@@ -60,18 +62,19 @@ func clearThreads() {
  */
 func addPost(postImage: UIImage, thread: String, username: String) {
     // Uncomment the lines beneath this one if you've already connected Firebase:
-//    let dbRef = Database.database().reference()
-//    let data = UIImageJPEGRepresentation(postImage, 1.0)
-//    let path = "Images/\(UUID().uuidString)"
-//
-//    let dateFormatter = DateFormatter()
-//    dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.A"
-//    let dateString = dateFormatter.string(from: Date())
-//    let postDict: [String:AnyObject] = ["imagePath": path as AnyObject,
-//                                        "username": username as AnyObject,
-//                                        "thread": thread as AnyObject,
-//                                        "date": dateString as AnyObject]
-    // YOUR CODE HERE
+    let dbRef = Database.database().reference()
+    let data = UIImageJPEGRepresentation(postImage, 1.0)
+    let path = "Images/\(UUID().uuidString)"
+
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.A"
+    let dateString = dateFormatter.string(from: Date())
+    let postDict: [String:AnyObject] = ["imagePath": path as AnyObject,
+                                        "username": username as AnyObject,
+                                        "thread": thread as AnyObject,
+                                        "date": dateString as AnyObject]
+    dbRef.child(firPostsNode).childByAutoId().setValue(postDict)
+    store(data: data, toPath: path)
 }
 
 
@@ -81,16 +84,13 @@ func addPost(postImage: UIImage, thread: String, username: String) {
 // reference.
 //
 func store(data: Data?, toPath path: String) {
-//    let storageRef = Storage.storage().reference()
-//    storageRef.child(path).putData(data!, metadata: nil) { (metadata, error) in
-//        if let error = error {
-//            print(error)
-//        }
-//    }
+    let storageRef = Storage.storage().reference()
+    storageRef.child(path).putData(data!, metadata: nil) { (metadata, error) in
+        if let error = error {
+            print(error)
+        }
+    }
 }
-
-
-
 
 /*
  TODO:
@@ -110,22 +110,41 @@ func store(data: Data?, toPath path: String) {
  Remember to use constants defined in Strings.swift to refer to the correct path!
  */
 func getPosts(user: CurrentUser, completion: @escaping ([Post]?) -> Void) {
-    
+    let dbRef = Database.database().reference()
+    var postArray: [Post] = []
+    dbRef.child("posts").observeSingleEvent(of: .value, with: { snapshot -> Void in
+        if snapshot.exists() {
+            if let posts = snapshot.value as? [String:AnyObject] {
+                user.getReadPostIDs(completion: { (ids) in
+                    for postKey in posts.keys {
+                        var vals: [String: String] = posts[postKey] as! [String : String]
+                        var newPost = Post(id: postKey, username: vals["username"]!, postImagePath: vals["imagePath"]!, thread: vals["thread"]!, dateString: vals["date"]!, read: ids.contains(postKey))
+                        postArray.append(newPost)
+                    }
+                    completion(postArray)
+                })
+            } else {
+                completion(nil)
+            }
+        } else {
+            completion(nil)
+        }
+    })
 }
 
 // TODO:
 // Uncomment the lines in the function when you reach the appriopriate par in the README.
 func getDataFromPath(path: String, completion: @escaping (Data?) -> Void) {
-//    let storageRef = Storage.storage().reference()
-//    storageRef.child(path).getData(maxSize: 5 * 1024 * 1024) { (data, error) in
-//        if let error = error {
-//            print(error)
-//        }
-//        if let data = data {
-//            completion(data)
-//        } else {
-//            completion(nil)
-//        }
-//    }
+    let storageRef = Storage.storage().reference()
+    storageRef.child(path).getData(maxSize: 5 * 1024 * 1024) { (data, error) in
+        if let error = error {
+            print(error)
+        }
+        if let data = data {
+            completion(data)
+        } else {
+            completion(nil)
+        }
+    }
 }
 
