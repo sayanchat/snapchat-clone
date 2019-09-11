@@ -417,8 +417,8 @@
                             <constraint firstItem="3hu-KD-Bso" firstAttribute="centerX" secondItem="hKB-qh-hlc" secondAttribute="centerX" id="2Db-MW-LKE"/>
                             <constraint firstItem="3hu-KD-Bso" firstAttribute="leading" secondItem="hKB-qh-hlc" secondAttribute="leading" constant="60" id="B9p-Pn-Zy0"/>
                             <constraint firstItem="ajC-oq-CP7" firstAttribute="centerX" secondItem="hKB-qh-hlc" secondAttribute="centerX" id="DcE-cB-8pu"/>
+                            <constraint firstItem="3hu-KD-Bso" firstAttribute="top" secondItem="IrG-Rw-fi1" secondAttribute="bottom" constant="102" id="ETt-ne-2sh"/>
                             <constraint firstItem="esP-N4-7Zt" firstAttribute="top" secondItem="3hu-KD-Bso" secondAttribute="bottom" constant="30" id="dc0-QH-7Ei"/>
-                            <constraint firstItem="3hu-KD-Bso" firstAttribute="top" secondItem="IrG-Rw-fi1" secondAttribute="bottom" constant="102" id="m15-In-Pwc"/>
                             <constraint firstItem="ajC-oq-CP7" firstAttribute="top" secondItem="esP-N4-7Zt" secondAttribute="bottom" constant="8" id="nfX-j3-nLt"/>
                             <constraint firstItem="esP-N4-7Zt" firstAttribute="centerX" secondItem="hKB-qh-hlc" secondAttribute="centerX" id="qvh-0C-BCp"/>
                         </constraints>
@@ -557,7 +557,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dmg-lp-art" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-3562" y="80"/>
+            <point key="canvasLocation" x="-3562" y="485"/>
         </scene>
     </scenes>
     <resources>
